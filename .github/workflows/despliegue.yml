@@ -1,0 +1,23 @@
+name: Despliegue
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: 🐘 Desplegar
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🦅 Actualizar aplicación
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DOMINIO }}
+          username: ${{ secrets.USUARIO }}
+          password: ${{ secrets.CLAVE }}
+          script: |
+            cd ${{ secrets.RUTA }}
+            git pull
+            docker-compose down
+            docker-compose pull umami
+            docker-compose up -d

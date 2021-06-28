@@ -1,0 +1,33 @@
+version: '3.2'
+
+services:
+  bd:
+    container_name: analitica-bd
+    image: postgres:alpine
+    restart: unless-stopped
+    networks:
+      - red
+    environment:
+      POSTGRES_DB: ${BD_NOMBRE}
+      POSTGRES_USER: ${BD_USUARIO}
+      POSTGRES_PASSWORD: ${BD_CLAVE}
+    volumes:
+      - ./sql/schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
+      - ./datos:/var/lib/postgresql/data
+  
+  umami:
+    container_name: analitica-app
+    image: ghcr.io/mikecao/umami:postgresql-latest
+    restart: unless-stopped
+    networks:
+      - red
+    ports:
+      - ${PUERTO}:3000
+    depends_on:
+      - bd
+    environment:
+      DATABASE_URL: postgresql://${BD_USUARIO}:${BD_CLAVE}@bd:5432/${BD_NOMBRE}
+      DATABASE_TYPE: postgresql
+      HASH_SALT: ${SALT}
+networks:
+  red:
