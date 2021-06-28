@@ -11,12 +11,31 @@ Este repositorio contiene lo necesario para instalar la aplicación en un servid
 
 ## Instalación
 
+### Clonar
 En el servidor:
 
 ```bash
 git clone https://github.com/enflujo/sitios-analitica.git
 ```
 
+### Claves para contenedores
+Hacer una copia del archivo `.env.ejemplo` y llamarlo `.env` (o crear uno con las siguientes variables).
+
+```bash
+# Nombre de la base de datos en Postgres
+BD_NOMBRE=...
+# Usuario dueño de la base de datos
+BD_USUARIO=...
+# Clave para conectarse a Postgres
+BD_CLAVE=...
+# Una llave única para Umami,
+# puede ser generada con UUID4 https://www.uuidgenerator.net/version4
+SALT=...
+# El puerto por donde corre la instancia de Umami (NodeJS)
+PUERTO=...
+```
+
+### Iniciar con Docker
 Umami es una aplicación de Node y se puede instalar directamente clonano el código desde su [repositorio](https://github.com/mikecao/umami). En nuestro caso vamos a usar Docker para no depender de una base de datos administrada en el servidor. 
 
 Ver el archivo `docker-compose.yml` para saber que versión de Postgres y Umami se están instalando (de manera predeterminada se usan las mas recientes de cada una).
