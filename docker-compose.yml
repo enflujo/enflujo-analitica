@@ -3,7 +3,7 @@ version: '3.2'
 services:
   bd:
     container_name: analitica-bd
-    image: postgres:alpine
+    image: postgres:13.5-alpine
     restart: unless-stopped
     networks:
       - red
