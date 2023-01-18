@@ -18,7 +18,7 @@ services:
   
   umami:
     container_name: analitica-app
-    image: ghcr.io/mikecao/umami:postgresql-latest
+    image: ghcr.io/umami-software/umami:postgresql-latest
     restart: unless-stopped
     networks:
       - red
