@@ -18,6 +18,6 @@ jobs:
           script: |
             cd ${{ secrets.RUTA }}
             git pull
-            docker-compose down
-            docker-compose pull umami
+            docker compose down
+            docker compose pull umami
             docker compose up --force-recreate -d
