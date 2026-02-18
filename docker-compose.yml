@@ -1,5 +1,3 @@
-version: '3.2'
-
 services:
   bd:
     container_name: analitica-bd
@@ -15,20 +13,32 @@ services:
       - ./dump:/docker-entrypoint-initdb.d
       # - ./sql/schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
       - ./datos:/var/lib/postgresql/data
-  
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   umami:
     container_name: analitica-app
-    image: ghcr.io/umami-software/umami:postgresql-latest
+    image: ghcr.io/umami-software/umami:latest
     restart: unless-stopped
+    init: true
     networks:
       - red
     ports:
       - ${PUERTO}:3000
     depends_on:
-      - bd
+      bd:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://${BD_USUARIO}:${BD_CLAVE}@bd:5432/${BD_NOMBRE}
-      DATABASE_TYPE: postgresql
-      HASH_SALT: ${SALT}
+      APP_SECRET: ${SALT}
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:3000/api/heartbeat"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 networks:
   red:
